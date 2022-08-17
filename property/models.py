@@ -1,5 +1,9 @@
+from datetime import datetime
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Flat(models.Model):
@@ -48,5 +52,20 @@ class Flat(models.Model):
         db_index=True)
     new_building = models.BooleanField('Новое строение', null=True)
 
+    liked_by = models.ManyToManyField(User, verbose_name='Кто лайкнул', related_name="liked_flats", blank=True)
+
+    pure_phone = PhoneNumberField('Нормализованный номер владельца', blank=True)
+
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
+
+
+class Complaint(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='complaint_users',
+                             on_delete=models.CASCADE)
+    flat = models.ForeignKey(Flat, verbose_name='Квартира', related_name='complaint_flats', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_created=True, verbose_name='Дата создания жалобы', auto_now=True)
+    text = models.TextField(verbose_name='Текст', )
+
+    def __str__(self):
+        return f'Жалоба от {self.user} - {datetime.strftime(self.date, "%Y-%m-%d")}'
