@@ -7,8 +7,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Flat(models.Model):
-    owner = models.CharField('ФИО владельца', max_length=200)
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
@@ -64,11 +62,11 @@ class Complaint(models.Model):
     user = models.ForeignKey(User, verbose_name='Пользователь', related_name='complaint_users',
                              on_delete=models.CASCADE)
     flat = models.ForeignKey(Flat, verbose_name='Квартира', related_name='complaint_flats', on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_created=True, verbose_name='Дата создания жалобы', auto_now=True)
+    created_at = models.DateTimeField(auto_created=True, verbose_name='Дата создания жалобы', auto_now=True)
     text = models.TextField(verbose_name='Текст', )
 
     def __str__(self):
-        return f'Жалоба от {self.user} - {datetime.strftime(self.date, "%Y-%m-%d")}'
+        return f'Жалоба от {self.user} - {datetime.strftime(self.created_at, "%Y-%m-%d")}'
 
 
 class Owner(models.Model):
