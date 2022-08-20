@@ -10,10 +10,8 @@ def copy_flats_from_flat_to_owner(apps, schema_editor):
     for owner in owners:
         owner_flats = Flat.objects.filter(owner=owner)
         for owner_flat in owner_flats:
-            owner.objects.get_or_create(
-                flats=owner_flat
-            )
-        owner.save()
+            Owner.objects.update_or_create(flats=owner_flat)
+            Owner.save()
 
 
 class Migration(migrations.Migration):
