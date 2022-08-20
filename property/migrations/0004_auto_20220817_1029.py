@@ -8,12 +8,8 @@ def set_new_or_old_builders(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     all_flats = Flat.objects.all()
     for flat in all_flats:
-        if flat.construction_year >= 2015:
-            flat.new_building = True
-            flat.save()
-        else:
-            flat.new_building = False
-            flat.save()
+        flat.new_building = flat.construction_year >= 2015
+        flat.save()
 
 
 class Migration(migrations.Migration):
