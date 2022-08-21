@@ -6,7 +6,7 @@ from django.db import migrations
 def copy_phones_number_to_pure_phone(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     all_flats = Flat.objects.all()
-    for flat in all_flats:
+    for flat in all_flats.iterator():
         flat.pure_phone = phonenumbers.parse(flat.owners_phonenumber, "RU")
         flat.save()
 
