@@ -6,10 +6,8 @@ from django.db import migrations
 
 def set_new_or_old_builders(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    all_flats = Flat.objects.all()
-    for flat in all_flats.iterator():
-        flat.new_building = flat.construction_year >= 2015
-        flat.save()
+    Flat.objects.filter(construction_year__gte=2015).update(new_building=True)
+    Flat.objects.filter(construction_year__lt=2015).update(new_building=False)
 
 
 class Migration(migrations.Migration):
